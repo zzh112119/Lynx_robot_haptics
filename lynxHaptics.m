@@ -9,10 +9,13 @@ hardwareFlag = false;
 %% Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
 global posEE % position of end effectr
+global btnPressed %boolean array indicating stastus of each button
+global velocity %velocity of end effector
 
 figClosed = 0;
 qs = [0,0,0]; % initialize robot to zero pose
 posEE = [0,0,0];  % initialize position of end effector
+posEE_old = computeEEposition();
 
 hold on; scatter3(0, 0, 0, 'kx', 'Linewidth', 2); % plot origin
 h1 = scatter3(0, 0, 0, 'r.', 'Linewidth', 2); % plot end effector position
@@ -26,8 +29,13 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create static objects and interactive objects in their initial state
 
+syms Fn v 
+
 Env_1=[200 200 200 200; -300 -300 300 300; -300 300 300 -300];
 Env={Env_1};    %Environment Cell
+Text_1.area = [200 200 200 200; -50 -50 50 50; -50 50 50 -50];
+
+
 
 Obs={};         %Obstacle Cell
 
@@ -47,6 +55,7 @@ while(1)
     %% Calculate current end effector position
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     posEE = computeEEposition();
+    velocity = posEE
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% Calculate desired force based on current end effector position
