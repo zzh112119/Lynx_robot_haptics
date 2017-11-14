@@ -37,11 +37,14 @@ Env_2 = [200 200 200 200; -300 -300 0 0; -300 0 0 -300];
 Env_3 = [200 200 200 200; 0 0 300 300; -300 0 0 -300];
 Env={Env_1, Env_2, Env_3};    %Environment Cell
 Text_1.area = [200 200 200 200; -300 -300 0 0; -300 0 0 -300];
-Text_1.character = -10 * Fn .* v + 0 * pos;
+Text_1.character = -0.10 * Fn .* v + 0 * pos;
 Text_2.area = [200 200 200 200; 0 0 300 300; -300 0 0 -300];
-Text_2.character = -5 * Fn .* v + -5 .* sin(pos);
+Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v;
 texts = [Text_1, Text_2];
-
+pts_1 = struct('pos', [100;150;150], 'isattractive', 1, 'strength', 10);
+pts = [pts_1];
+obsts = [];
+btns = [];
 Obs={};         %Obstacle Cell
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,7 +73,7 @@ while(1)
     %% Calculate desired force based on current end effector position
     % Check for collisions with objects in the environment and compute the total force on the end effector
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    F = computeForces();
+    F = computeForces(Env, texts, obsts, btns, pts);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% Plot Environment
