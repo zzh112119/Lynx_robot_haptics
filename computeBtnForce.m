@@ -1,5 +1,6 @@
-function F_btn=computeBtnForce(surface_b,c_surface)
+function F_btn=computeBtnForce(surface_b,c_surface,pos0)
 global posEE;
+global BtnFlag;
 
 F_btn= [0;0;0];
 
@@ -27,6 +28,11 @@ if sum(x1 .* X1) >= 0 & sum(x1 .* X2) >= 0 & sum(x4 .* X3) >= 0 & sum(x4 .* X4) 
         end
         if norm(ns .* x1) > 35
             F_btn = c_surface * sqrt(sum((x1 .* ns/norm(ns)) .^ 2)) * (ns / norm(ns));
+            if BtnFlag == 1
+                BtnFlag=0;
+            else
+                BtnFlag=BtnFlag+1;
+            end
         end
     end
 end

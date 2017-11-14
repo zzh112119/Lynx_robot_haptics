@@ -9,9 +9,10 @@ hardwareFlag = false;
 %% Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
 global posEE % position of end effectr
-global btnPressed %boolean array indicating stastus of each button
+global BtnFlag %boolean array indicating stastus of each button
 global velocity %velocity of end effector
 
+BtnFlag=0;
 figClosed = 0;
 qs = [0,0,0]; % initialize robot to zero pose
 posEE = [0,0,0];  % initialize position of end effector
