@@ -1,4 +1,5 @@
-function F = computeTextureForce(Fn, character, velocity)
+function F = computeTextureForce(Fnq, character, velocity)
 global PosEE;
 
-F = subs(character, ['Fn', 'velocity', 'posEE'], [Fn, velocity, posEE]);
+Fk = norm(Fnq);
+F = subs(character, ['Fn', 'v', 'pos'], [Fk, velocity, posEE]);
