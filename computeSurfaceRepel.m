@@ -14,7 +14,6 @@ if sum(x1 .* X1) >= 0 & sum(x1 .* X2) >= 0 & sum(x4 .* X3) >= 0 & sum(x4 .* X4) 
     if isnan(ns(2))
         ns = [1;0;0];
     end
-    ns
     if sum(ns .* (pos0 - surface(:, 1))) == 0
         warning('Initial position on plane: May not be able to define plane direction')
     end
@@ -22,8 +21,6 @@ if sum(x1 .* X1) >= 0 & sum(x1 .* X2) >= 0 & sum(x4 .* X3) >= 0 & sum(x4 .* X4) 
         ns = -ns;
     end
     if sum(ns .* x1) < 0
-        x1
-        ns
         Fp = c_surface * sqrt(sum((x1 .* ns ./ norm(ns)) .^ 2)) .* (ns / norm(ns));
     end
 end
