@@ -52,9 +52,9 @@ for i = 1 : length(pts)
     %Model attractive and repulsive points -- warning: former code should
     %be modified
     if pts(i).isattract
-        F = F + computeAttForce(pts(i).pos, pts(i).str);
-    else
-        F = F + computeRepForce();
+        F = F + computeAttForce(pts(i).pos, pts(i).strength);
+%     else
+%         F = F + computeRepForce();
     end
 end
 
