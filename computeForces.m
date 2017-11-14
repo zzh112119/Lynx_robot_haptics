@@ -15,7 +15,6 @@ function [F, obsts] = computeForces(surfs, texts, obsts, btns, pts)
 
 
 global posEE;
-global btnPressed;
 global velocity;
 
 % Fill this in
@@ -46,7 +45,7 @@ end
 
 for i = 1 : length(btns)
     %Model button event
-    F = F + computeBtnForce();
+    F = F + computeBtnForce(surface_b,c_surface,pos0);
 end
 
 for i = 1 : length(pts)
