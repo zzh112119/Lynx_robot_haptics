@@ -31,12 +31,15 @@ end
 
 syms Fn v pos;
 
-Env_1=[200 200 200 200; -300 -300 300 300; -300 300 300 -300];
-Env={Env_1};    %Environment Cell
-Text_1.area = [200 200 200 200; -300 -300 0 0; -300 300 300 -300];
+Env_1=[200 200 200 200; -300 -300 300 300; 0 300 300 0];
+Env_2 = [200 200 200 200; -300 -300 0 0; -300 0 0 -300];
+Env_3 = [200 200 200 200; 0 0 300 300; -300 0 0 -300];
+Env={Env_1, Env_2, Env_3};    %Environment Cell
+Text_1.area = [200 200 200 200; -300 -300 0 0; -300 0 0 -300];
 Text_1.character = -10 * Fn .* v + 0 * pos;
-Text_2.area = [200 200 200 200; 0 0 300 300; -300 300 300 -300];
+Text_2.area = [200 200 200 200; 0 0 300 300; -300 0 0 -300];
 Text_2.character = -5 * Fn .* v + -5 .* sin(pos);
+texts = [Text_1, Text_2];
 
 Obs={};         %Obstacle Cell
 
@@ -47,6 +50,7 @@ axis([-1000 1000 -1000 1000 -1000 1000]);
 view([75,30]);
 
 i = 0; frameSkip = 3; % plotting variable - set how often plot updates
+time_old = cputime;
 while(1)
     %% Read potentiometer values, convert to angles and end effector location
     if hardwareFlag
@@ -56,7 +60,10 @@ while(1)
     %% Calculate current end effector position
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     posEE = computeEEposition();
-    velocity = (posEE - posEE_old) / ();
+    time_cur = cputime;
+    velocity = (posEE - posEE_old) ./ (time_cur - time_old);
+    posEE_old = posEE;
+    time_old = time_cur;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% Calculate desired force based on current end effector position
@@ -69,12 +76,14 @@ while(1)
     if i == 0
         figClosed = drawLynx(h1, h2, F);
         
-        for j=1:1:length(Env)
-            
+        for j=1:1:length(Env)-length(texts)            
             fill3(Env{1,j}(1,:),Env{1,j}(2,:), Env{1,j}(3,:),[0.7 0 0], 'facealpha', 0.3);
-
         end
        
+        for j = 1 : length(texts)
+            fill3(texts(j).area(1, :), texts(j).area(2, :), texts(j).area(3, :) ,[0 1-0.25*j 0.25*j], 'facealpha', 0.3)
+        end
+        
         drawnow
         hold on;
     end
