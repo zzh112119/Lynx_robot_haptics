@@ -29,13 +29,14 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create static objects and interactive objects in their initial state
 
-syms Fn v 
+syms Fn v pos;
 
 Env_1=[200 200 200 200; -300 -300 300 300; -300 300 300 -300];
 Env={Env_1};    %Environment Cell
-Text_1.area = [200 200 200 200; -50 -50 50 50; -50 50 50 -50];
-
-
+Text_1.area = [200 200 200 200; -300 -300 0 0; -300 300 300 -300];
+Text_1.character = -10 * Fn .* v + 0 * pos;
+Text_2.area = [200 200 200 200; 0 0 300 300; -300 300 300 -300];
+Text_2.character = -5 * Fn .* v + -5 .* sin(pos);
 
 Obs={};         %Obstacle Cell
 
@@ -55,7 +56,7 @@ while(1)
     %% Calculate current end effector position
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     posEE = computeEEposition();
-    velocity = posEE
+    velocity = (posEE - posEE_old) / ();
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% Calculate desired force based on current end effector position
