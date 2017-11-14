@@ -38,9 +38,10 @@ end
 
 for i = 1 : length(obsts)
     %Model collision with obstacles
-    F = F + computeObstacle();
+    Fk = computeObstacle();
+    F = F + Fk;
     %Model the movement of obstacles
-    obsts{i} = updateObePosition(obsts{i});
+    obsts{i} = updateObsPosition(obsts{i});
 end
 
 for i = 1 : length(btns)
