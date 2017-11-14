@@ -11,6 +11,7 @@ global qs % configuration (NOTE: This is only 3 angles now)
 global posEE % position of end effectr
 global BtnFlag %boolean array indicating stastus of each button
 global velocity %velocity of end effector
+%global posEE_obs % position of end effector is there's force applied
 
 BtnFlag=0;
 figClosed = 0;
@@ -21,6 +22,7 @@ posEE_old = computeEEposition();
 hold on; scatter3(0, 0, 0, 'kx', 'Linewidth', 2); % plot origin
 h1 = scatter3(0, 0, 0, 'r.', 'Linewidth', 2); % plot end effector position
 h2 = quiver3(0, 0, 0, 0, 0, 0, 'b'); % plot output force
+%h3 = scatter3(0, 0, 0, 'b','Linewidth',2);
 if ~hardwareFlag
     h_fig = figure(1);
     set(h_fig, 'Name','Haptic environment: Close figure to quit.' ,'KeyPressFcn', @(h_obj, evt) keyPressFcn(h_obj, evt));
@@ -74,7 +76,9 @@ while(1)
     end
     
     Jv = computeJacobian(qs(1), qs(2), qs(3), L1, L2, L3);
-    
+
+    posEE_obs=posEE;
+
     % Calculate current end effector position
     
     posEE = computeEEposition();
@@ -88,8 +92,16 @@ while(1)
 
     F = computeForces(Env, texts, obsts, btns, pts);
     
+    % Compute torques from forces and convert to currents for servos
+    [Tau, Tauflag] = computeTorques(Jv,F);
+    
+    if Tauflag
+        scatter3(posEE_obs(1),posEE_obs(2),posEE_obs(3),'b.');
+    end
+        
     % Plot Environment
     if i == 0
+        
         figClosed = drawLynx(h1, h2, F);
         
         for j=1:1:length(Env)-length(texts)            
@@ -103,9 +115,6 @@ while(1)
         drawnow
         hold on;
     end
-    
-    % Compute torques from forces and convert to currents for servos
-    Tau = computeTorques(Jv,F);
     
     if hardwareFlag
         if figClosed % quit by closing the figure
