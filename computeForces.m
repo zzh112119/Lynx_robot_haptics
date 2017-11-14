@@ -32,8 +32,8 @@ end
 
 for i  = 1 : length(texts)
     %Model and adding friction by texture
-    Fn = computeSurfaceRepel(posEE, texts{i}.area, pos0);
-    F = F + computeTextureForce(Fn, texts{i}.character, velocity);
+    Fn = computeSurfaceRepel(posEE, texts(i).area, pos0);
+    F = F + computeTextureForce(Fn, texts(i).character, velocity);
 end
 
 for i = 1 : length(obsts)
@@ -52,7 +52,7 @@ for i = 1 : length(pts)
     %Model attractive and repulsive points -- warning: former code should
     %be modified
     if pts(i).isattract
-        F = F + computeAttForce();
+        F = F + computeAttForce(pts(i).pos, pts(i).str);
     else
         F = F + computeRepForce();
     end
