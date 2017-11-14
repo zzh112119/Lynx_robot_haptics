@@ -15,7 +15,6 @@ function [F, obsts] = computeForces(surfs, texts, obsts, btns, pts)
 
 
 global posEE;
-global btnPressed;
 global velocity;
 
 % Fill this in
