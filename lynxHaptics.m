@@ -25,7 +25,9 @@ if ~hardwareFlag
     h_fig = figure(1);
     set(h_fig, 'Name','Haptic environment: Close figure to quit.' ,'KeyPressFcn', @(h_obj, evt) keyPressFcn(h_obj, evt));
 end
-
+L1 = 3*25.4;          %base height (in mm)
+L2 = 5.75*25.4;       %shoulder to elbow length (in mm)
+L3 = 7.375*25.4;  
 %% Create Environment here:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create static objects and interactive objects in their initial state
@@ -60,6 +62,7 @@ while(1)
     if hardwareFlag
         qs = lynxGetAngles();
     end
+    Jv = computeJacobian(qs(1), qs(2), qs(3), L1, L2, L3);
     
     %% Calculate current end effector position
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,7 +97,7 @@ while(1)
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Compute torques from forces and convert to currents for servos
-    Tau = computeTorques();
+    Tau = computeTorques(Jv,F);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     if hardwareFlag
