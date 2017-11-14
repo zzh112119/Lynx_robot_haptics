@@ -27,11 +27,17 @@ pos0 = X0(4, :);
 for i = 1 : length(surfs)
     %Model surface repel force
     F = F + computeSurfaceRepel(posEE, surfs{i}, pos0);
+    if norm(F) > 0
+        F
+    end
 end
 
 for i  = 1 : length(texts)
     %Model and adding friction by texture
     Fn = computeSurfaceRepel(posEE, texts(i).area, pos0);
+    if norm(Fn) > 0
+        Fn
+    end
     F = F + computeTextureForce(Fn, texts(i).character, velocity);
 end
 

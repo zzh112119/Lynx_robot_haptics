@@ -4,7 +4,7 @@
 % Fill in the necessary inputs
 function Tau = computeTorques(Jv,F)
 
-Tau = Jv'*F;
+Tau = (Jv ./ 1000)' * F;
 
 if Tau(1)>0.7
     Tau(1)=0.7;

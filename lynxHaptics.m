@@ -34,16 +34,16 @@ L3 = 7.375*25.4;
 
 syms Fn v pos;
 
-Env_1=[200 200 200 200; -300 -300 300 300; 0 300 300 0];
-Env_2 = [200 200 200 200; -300 -300 0 0; -300 0 0 -300];
-Env_3 = [200 200 200 200; 0 0 300 300; -300 0 0 -300];
+Env_1=[100 100 100 100; -1300 -1300 1300 1300; 0 1300 1300 0];
+Env_2 = [100 100 100 100; -1300 -1300 0 0; -1300 0 0 -1300];
+Env_3 = [100 100 100 100; 0 0 1300 1300; -1300 0 0 -1300];
 Env={Env_1, Env_2, Env_3};    %Environment Cell
-Text_1.area = [200 200 200 200; -300 -300 0 0; -300 0 0 -300];
+Text_1.area = [100 100 100 100; -1300 -1300 0 0; -1300 0 0 -1300];
 Text_1.character = -0.10 * Fn .* v + 0 * pos;
-Text_2.area = [200 200 200 200; 0 0 300 300; -300 0 0 -300];
+Text_2.area = [100 100 100 100; 0 0 1300 1300; -1300 0 0 -1300];
 Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v;
 texts = [Text_1, Text_2];
-pts_1 = struct('pos', [100;150;150], 'isattractive', 1, 'strength', 10);
+pts_1 = struct('pos', [100;150;150], 'isattract', 1, 'strength', 10);
 pts = [pts_1];
 obsts = [];
 btns = [];
@@ -62,13 +62,15 @@ while(1)
     if hardwareFlag
         qs = lynxGetAngles();
     end
+    
     Jv = computeJacobian(qs(1), qs(2), qs(3), L1, L2, L3);
     
     %% Calculate current end effector position
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     posEE = computeEEposition();
+%     posEE
     time_cur = cputime;
-    velocity = (posEE - posEE_old) ./ (time_cur - time_old);
+    velocity = (posEE' - posEE_old') ./ (1e-10 + time_cur - time_old);
     posEE_old = posEE;
     time_old = time_cur;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -77,6 +79,7 @@ while(1)
     % Check for collisions with objects in the environment and compute the total force on the end effector
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     F = computeForces(Env, texts, obsts, btns, pts);
+%     F
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %% Plot Environment
