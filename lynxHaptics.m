@@ -4,7 +4,7 @@
 close all
 
 % Run on hardware or simulation
-hardwareFlag = false;
+hardwareFlag = true;
 
 % Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
@@ -37,26 +37,28 @@ L3 = 7.375*25.4;
 syms Fn v pos;
 
 % Define environment 
-Env_1=[100 100 100 100; -1300 -1300 1300 1300; 0 1300 1300 0];
-Env_2 = [100 100 100 100; -1300 -1300 0 0; -1300 0 0 -1300];
-Env_3 = [100 100 100 100; 0 0 1300 1300; -1300 0 0 -1300];
-Env={Env_1, Env_2, Env_3};   
+Env_1=[150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
+Env_2 = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
+%Env_3 = [150 150 150 150; 0 0 1300 1300; -1300 0 0 -1300];
+Env={};   
 
 % Define texture areas 
-Text_1.area = [100 100 100 100; -1300 -1300 0 0; -1300 0 0 -1300];
-Text_1.character = -0.10 * Fn .* v + 0 * pos;
-Text_2.area = [100 100 100 100; 0 0 1300 1300; -1300 0 0 -1300];
-Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v;
-texts = {Text_1, Text_2};
+Text_1.area = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
+Text_1.character = -3 * Fn .* v ./1000 + 0 * pos;
+Text_2.area = [150 150 150 150; 0 0 1300 1300; -1300 200 200 -1300];
+Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v ./1000;
+texts = {};
 
 % Define att/rep points
-pts_1 = struct('pos', [100;150;150], 'isattract', 1, 'strength', 10);
+pts_1 = struct('pos', [200;150;150], 'isattract', 1, 'strength', 2);
+scatter3(200,150,150,'b.')
+hold on;
 pts = {pts_1};
 
 % Define buttons
-btn_1.area = [100 100 100 100; 0 0 1300 1300; -1300 0 0 -1300];
-btn_1.c = 10;
-btns = {btn_1};
+btn_1.area = [150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
+btn_1.c = 0.05;
+btns = {};
 
 % Define Obstacles
 obsts = [];
@@ -83,18 +85,21 @@ while(1)
     
     posEE = computeEEposition();
     time_cur = cputime;
-    velocity = (posEE' - posEE_old') ./ (1e-10 + time_cur - time_old);
-    posEE_old = posEE;
-    time_old = time_cur;
+    if time_cur - time_old > 0.0001
+        velocity = (posEE' - posEE_old') ./ (1e-10 + time_cur - time_old);
+        posEE_old = posEE;
+        time_old = time_cur;
+    end
         
     % Calculate desired force based on current end effector position
     % Check for collisions with objects in the environment and compute the total force on the end effector
 
     F = computeForces(Env, texts, obsts, btns, pts);
     
+    
     % Compute torques from forces and convert to currents for servos
     [Tau, Tauflag] = computeTorques(Jv,F);
-    
+    %Tau
     if Tauflag
         scatter3(posEE_obs(1),posEE_obs(2),posEE_obs(3),'b.');
     end

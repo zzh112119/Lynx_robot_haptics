@@ -6,8 +6,8 @@ function Fa = computeAttForce(Pg,Spotential)
 global posEE
 
 Fa = [0;0;0];
-if norm(Pg'-posEE) <= 100
-    Fa = Spotential * (Pg-posEE') / norm(Pg'-posEE); 
+if norm(Pg-posEE') <= 200
+    Fa = Spotential * (Pg-posEE') / norm(Pg-posEE'); 
 end
 
 end
