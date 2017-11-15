@@ -4,7 +4,7 @@
 close all
 
 % Run on hardware or simulation
-hardwareFlag = true;
+hardwareFlag = false;
 
 % Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
