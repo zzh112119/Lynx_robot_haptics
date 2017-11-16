@@ -70,7 +70,8 @@ while(1)
     posEE = computeEEposition();
 %     posEE
     time_cur = cputime;
-    velocity = (posEE' - posEE_old') ./ (1e-10 + time_cur - time_old);
+    deltaT = time_cur - time_old;
+    velocity = (posEE' - posEE_old') ./ (1e-10 + deltaT);
     posEE_old = posEE;
     time_old = time_cur;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

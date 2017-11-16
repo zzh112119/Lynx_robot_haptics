@@ -40,7 +40,7 @@ for i = 1 : length(obsts)
     Fk = computeObstacle();
     F = F + Fk;
     %Model the movement of obstacles
-    obsts{i} = updateObsPosition(obsts{i});
+    obsts{i} = updateObsPosition(obsts{i}, Fk);
 end
 
 for i = 1 : length(btns)
