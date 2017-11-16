@@ -1,7 +1,7 @@
 % Check for collisions with objects in the environment and compute the
 % total force on the end effector
 
-function [F, obsts] = computeForces(surfs, texts, obsts, btns, pts)
+function [F, obsts_dull] = computeForces(surfs, texts, obsts, btns, pts)
 %Input:
 %surfs -- a cell of matrices showing surface position
 %texts -- a matrix of structs, .area shows position, .character gives the
@@ -38,16 +38,16 @@ end
 
 for i = 1 : length(obsts)
     %Model collision with obstacles
-    Fk = computeObstacle();
+    Fk = computeObstacle(obsts(i));
     F = F + Fk;
+%     Fk'
     %Model the movement of obstacles
-    obsts{i} = updateObsPosition(obsts{i}, Fk);
+    obsts_dull(i) = updateObsPosition(obsts(i), pts{1}.pos, Fk);
 end
 
 for i = 1 : length(btns)
     %Model button event
     F = F + computeBtnForce(btns{i}.area, btns{i}.c, pos0);
-    F'
 end
 
 for i = 1 : length(pts)
@@ -55,7 +55,6 @@ for i = 1 : length(pts)
     %be modified
     if pts{i}.isattract
         F = F + computeAttForce(pts{i}.pos, pts{i}.strength);
-        F
 %     else
 %         F = F + computeRepForce();
     end

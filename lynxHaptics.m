@@ -11,6 +11,8 @@ global qs % configuration (NOTE: This is only 3 angles now)
 global posEE % position of end effectr
 global BtnFlag %boolean array indicating stastus of each button
 global velocity %velocity of end effector
+global deltaT
+global posobst
 %global posEE_obs % position of end effector is there's force applied
 
 BtnFlag=0;
@@ -50,8 +52,8 @@ Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v ./1000;
 texts = {};
 
 % Define att/rep points
-pts_1 = struct('pos', [200;150;150], 'isattract', 1, 'strength', 2);
-scatter3(200,150,150,'b.')
+pts_1 = struct('pos', [200;200;200], 'isattract', 1, 'strength', 2);
+scatter3(200,200,200,'b.')
 hold on;
 pts = {pts_1};
 
@@ -61,8 +63,13 @@ btn_1.c = 0.05;
 btns = {};
 
 % Define Obstacles
-obsts = [];
-Obs={};         
+obsts_1.pos = [200; 200; 200];
+obsts_1.mass = 2;
+obsts_1.r = 200;
+obsts_1.v = [0;0;0];
+obsts = [obsts_1];         
+
+h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');
 
 % set camera properties
 axis([-1000 1000 -1000 1000 -1000 1000]);
@@ -86,7 +93,8 @@ while(1)
     posEE = computeEEposition();
     time_cur = cputime;
     if time_cur - time_old > 0.0001
-        velocity = (posEE' - posEE_old') ./ (1e-10 + time_cur - time_old);
+        deltaT = time_cur - time_old;
+        velocity = (posEE' - posEE_old') ./ deltaT;
         posEE_old = posEE;
         time_old = time_cur;
     end
@@ -94,7 +102,7 @@ while(1)
     % Calculate desired force based on current end effector position
     % Check for collisions with objects in the environment and compute the total force on the end effector
 
-    F = computeForces(Env, texts, obsts, btns, pts);
+    [F, obsts] = computeForces(Env, texts, obsts, btns, pts);
     
     
     % Compute torques from forces and convert to currents for servos
@@ -106,8 +114,8 @@ while(1)
         
     % Plot Environment
     if i == 0
-        
-        figClosed = drawLynx(h1, h2, F);
+        posobst = obsts(1).pos;
+        figClosed = drawLynx(h1, h2, h3, F);
         
         for j=1:1:length(Env)-length(texts)            
             fill3(Env{1,j}(1,:),Env{1,j}(2,:), Env{1,j}(3,:),[0.7 0 0], 'facealpha', 0.3);
@@ -118,7 +126,7 @@ while(1)
         end
         
         drawnow
-        hold on;
+%         hold on;
     end
     
     if hardwareFlag
