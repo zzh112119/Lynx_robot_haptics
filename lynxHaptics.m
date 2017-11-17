@@ -4,7 +4,7 @@
 close all
 
 % Run on hardware or simulation
-hardwareFlag = true;
+hardwareFlag = false;
 
 % Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
@@ -38,41 +38,50 @@ L3 = 7.375*25.4;
 
 syms Fn v pos;
 
-% Define environment 
-Env_1=[150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
-Env_2 = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
+% Define environment
+xmin = 150;
+xmax = 350;
+ymin = -200;
+ymax = 200;
+zmin = 100;
+zmax = 300;
+Env_1 = [xmin xmin xmin xmin; ymin ymin ymax ymax; zmin zmax zmax zmin];
+Env_3 = [xmax xmax xmax xmax; ymin ymin ymax ymax; zmin zmax zmax zmin];
+Env_4 = [xmin xmin xmax xmax; ymin ymax ymax ymin; zmax zmax zmax zmax];
+% Env_1=[150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
+% Env_2 = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
 %Env_3 = [150 150 150 150; 0 0 1300 1300; -1300 0 0 -1300];
-Env={};   
+Env={Env_1, Env_3, Env_4};   
 
 % Define texture areas 
-Text_1.area = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
+Text_1.area = [xmin xmin xmax xmax; ymin ymax ymax ymin; zmin zmin zmin zmin];
 Text_1.character = -3 * Fn .* v ./1000 + 0 * pos;
-Text_2.area = [150 150 150 150; 0 0 1300 1300; -1300 200 200 -1300];
+Text_2.area = [xmin xmin xmax xmax; ymax ymax ymax ymax; zmin zmax zmax zmin];
 Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v ./1000;
-texts = {Text_1};
+texts = {};
 
 % Define att/rep points
-pts_1 = struct('pos', [200;200;200], 'isattract', 1, 'strength', 2);
+pts_1 = struct('pos', [200;0;200], 'isattract', 1, 'strength', 0);
 scatter3(200,200,200,'b.')
 hold on;
 pts = {pts_1};
 
 % Define buttons
-btn_1.area = [150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
+btn_1.area = [xmin xmin xmax xmax; ymin ymin ymin ymin; zmin zmax zmax zmin];
 btn_1.c = 0.05;
 btns = {};
 
 % Define Obstacles
-obsts_1.pos = [200; 200; 200];
+obsts_1.pos = [250; 0; 200];
 obsts_1.mass = 0.01;
-obsts_1.r = 200;
-obsts_1.v = [0;0;0];
+obsts_1.r = 5;
+obsts_1.v = [-20.2;-19.2;0];
 obsts = [obsts_1];         
 
 h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');
 
 % set camera properties
-axis([-1000 1000 -1000 1000 -1000 1000]);
+axis([100 400 -300 300 0 400]);
 view([75,30]);
 
 i = 0; frameSkip = 3; % plotting variable - set how often plot updates
@@ -117,7 +126,7 @@ while(1)
         posobst = obsts(1).pos;
         figClosed = drawLynx(h1, h2, h3, F);
         
-        for j=1:1:length(Env)-length(texts)            
+        for j=1:1:length(Env)          
             fill3(Env{1,j}(1,:),Env{1,j}(2,:), Env{1,j}(3,:),[0.7 0 0], 'facealpha', 0.3);
         end
        
@@ -125,6 +134,9 @@ while(1)
             fill3(texts{j}.area(1, :), texts{j}.area(2, :), texts{j}.area(3, :) ,[0 1-0.25*j 0.25*j], 'facealpha', 0.3)
         end
         
+        for j = length(texts) + 1 : length(texts) + length(btns)
+            fill3(btns{j-length(texts)}.area(1, :), btns{j-length(texts)}.area(2, :), btns{j-length(texts)}.area(3, :) ,[0 1-0.25*j 0.25*j], 'facealpha', 0.3)
+        end
         drawnow
 %         hold on;
     end
