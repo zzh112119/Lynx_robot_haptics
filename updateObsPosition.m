@@ -1,7 +1,7 @@
 function obst_dull = updateObsPosition(obst, Pg, Fk)
 global deltaT
 
-Spotential = 5;
+Spotential = 0.5;
 Fa = [0;0;0];
 if (norm(Pg-obst.pos) > 0)
     Fa = Spotential * (Pg-obst.pos) / norm(Pg-obst.pos); 

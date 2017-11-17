@@ -4,7 +4,7 @@
 close all
 
 % Run on hardware or simulation
-hardwareFlag = false;
+hardwareFlag = true;
 
 % Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
@@ -49,7 +49,7 @@ Text_1.area = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
 Text_1.character = -3 * Fn .* v ./1000 + 0 * pos;
 Text_2.area = [150 150 150 150; 0 0 1300 1300; -1300 200 200 -1300];
 Text_2.character = (-0.05 * Fn + sum(-5 .* sin(pos))) .* v ./1000;
-texts = {};
+texts = {Text_1};
 
 % Define att/rep points
 pts_1 = struct('pos', [200;200;200], 'isattract', 1, 'strength', 2);
@@ -64,7 +64,7 @@ btns = {};
 
 % Define Obstacles
 obsts_1.pos = [200; 200; 200];
-obsts_1.mass = 2;
+obsts_1.mass = 0.01;
 obsts_1.r = 200;
 obsts_1.v = [0;0;0];
 obsts = [obsts_1];         
