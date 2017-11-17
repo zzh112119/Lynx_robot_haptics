@@ -123,7 +123,9 @@ while(1)
         
     % Plot Environment
     if i == 0
-        posobst = obsts(1).pos;
+        if length(obsts) > 0
+            posobst = obsts(1).pos;
+        end
         figClosed = drawLynx(h1, h2, h3, F);
         
         for j=1:1:length(Env)          
