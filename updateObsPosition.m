@@ -10,6 +10,8 @@ end
 
 accelerate = 0;% - (Fk - Fa) / obst.mass;
 
+obst_dull = struct('mass', 1, 'r', 0, 'pos', [0;0;0], 'v', [0;0;0]);
+
 obst_dull.mass = obst.mass;
 obst_dull.r = obst.r;
 obst_dull.pos = obst.pos + deltaT * obst.v + (1 / 2) * deltaT ^ 2 * accelerate;
