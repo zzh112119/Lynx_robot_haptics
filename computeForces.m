@@ -19,10 +19,12 @@ global velocity;
 
 % Fill this in
 F = [0;0;0];
+obsts_dull(1) = struct('mass', 1, 'r', 0, 'pos', [0;0;0], 'v', [0;0;0]);
 
 % Ensure the 0 configuration is in free space
 [X0, ~] = updateQ([0, 0, 0]);
 pos0 = X0(4, :);
+
 
 for i = 1 : length(surfs)
     %Model surface repel force

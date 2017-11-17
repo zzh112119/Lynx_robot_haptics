@@ -76,9 +76,9 @@ obsts_1.pos = [250; 0; 200];
 obsts_1.mass = 0.01;
 obsts_1.r = 5;
 obsts_1.v = [-20.2;-19.2;0];
-obsts = [obsts_1];         
+obsts = [];         
 
-h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');
+% h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');
 
 % set camera properties
 axis([100 400 -300 300 0 400]);
@@ -126,7 +126,8 @@ while(1)
         if length(obsts) > 0
             posobst = obsts(1).pos;
         end
-        figClosed = drawLynx(h1, h2, h3, F);
+%         figClosed = drawLynx(h1, h2, h3, F);
+        figClosed = drawLynx(h1, h2, F);
         
         for j=1:1:length(Env)          
             fill3(Env{1,j}(1,:),Env{1,j}(2,:), Env{1,j}(3,:),[0.7 0 0], 'facealpha', 0.3);
