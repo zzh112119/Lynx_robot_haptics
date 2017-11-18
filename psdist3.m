@@ -1,7 +1,7 @@
 function [Fp, ns, Fflag] = psdist3(pt, surface)
 
 Fp = 0;
-pos0 = [250;0;200];
+pos0 = [250;100;300];
 
 X1 = surface(:, 2) - surface(:, 1);
 X2 = surface(:, 4) - surface(:, 1);
@@ -14,7 +14,10 @@ ns = [0;0;0];
 ns = [(X2(3)*X1(2)-X1(3)*X2(2))/(X1(1)*X2(2) - X2(1)*X1(2)); 0; 1];
 ns(2) = (-X1(3) - X1(1) * ns(1)) / X1(2);
 if isnan(ns(2))
-    ns = [1;0;0];
+    ns(2) = (-X2(3) - X2(1) * ns(1)) / X2(2);
+    if isnan(ns(2))
+        ns = [1;0;0];
+    end
 end
 if sum(ns .* (pos0 - surface(:, 1))) == 0
     warning('Initial position on plane: May not be able to define plane direction')
