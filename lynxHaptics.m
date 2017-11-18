@@ -24,7 +24,8 @@ posEE_old = computeEEposition();
 hold on; scatter3(0, 0, 0, 'kx', 'Linewidth', 2); % plot origin
 h1 = scatter3(0, 0, 0, 'r.', 'Linewidth', 2); % plot end effector position
 h2 = quiver3(0, 0, 0, 0, 0, 0, 'b'); % plot output force
-%h3 = scatter3(0, 0, 0, 'b','Linewidth',2);
+h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');
+
 if ~hardwareFlag
     h_fig = figure(1);
     set(h_fig, 'Name','Haptic environment: Close figure to quit.' ,'KeyPressFcn', @(h_obj, evt) keyPressFcn(h_obj, evt));
@@ -48,38 +49,32 @@ zmax = 300;
 Env_1 = [xmin xmin xmin xmin; ymin ymin ymax ymax; zmin zmax zmax zmin];
 Env_3 = [xmax xmax xmax xmax; ymin ymin ymax ymax; zmin zmax zmax zmin];
 Env_4 = [xmin xmin xmax xmax; ymin ymax ymax ymin; zmax zmax zmax zmax];
-% Env_1=[150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
-% Env_2 = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
-%Env_3 = [150 150 150 150; 0 0 1300 1300; -1300 0 0 -1300];
-Env={Env_1};   
+Env={Env_1,Env_3,Env_4};   
 
 % Define texture areas 
-Text_1.area = [xmin xmin xmin xmin; ymin ymin ymax ymax; zmin zmax zmax zmin];
+Text_1.area = [xmax xmax xmin xmin; ymin ymin ymin ymin; zmin zmax zmax zmin];
 Text_2.character = -10 * Fn .* v ./1000 + 0 * pos;
 Text_2.area = [xmin xmin xmax xmax; ymax ymax ymax ymax; zmin zmax zmax zmin];
 Text_1.character = (-0.5 * Fn + sum(-10 .* sin(pos))) .* v ./100;
-texts = {};
+texts = {Text_1,Text_2};
 
 % Define att/rep points
 pts_1 = struct('pos', [250;0;200], 'isattract', 1, 'strength', 0.1);
-%scatter3(250,200,200,'b.')
-%hold on;
+scatter3(250,200,200,'b.')
+hold on;
 pts = {pts_1};
 
 % Define buttons
-%btn_1.area = [xmin xmin xmax xmax; ymin ymin ymin ymin; zmin zmax zmax zmin];
-btn_1.area = [xmin xmin xmin xmin; ymin ymin ymax ymax; zmin zmax zmax zmin];
+btn_1.area = [xmin xmin xmax xmax; ymin ymax ymax ymin; zmin zmin zmin zmin];
 btn_1.c = 0.05;
-btns = {};
+btns = {btn_1};
 
 % Define Obstacles
-obsts_1.pos = [250; 0; 200];
-obsts_1.mass = 0.01;
-obsts_1.r = 10;
-obsts_1.v = [-10;-10;0];
+obsts_1.pos = [250; 0; 200]; %mm
+obsts_1.mass = 0.01; %kg
+obsts_1.r = 10; %mm
+obsts_1.v = [0;0;0];
 obsts = [obsts_1];         
-
-h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');
 
 % set camera properties
 axis([50 400 -300 300 0 400]);
@@ -117,10 +112,11 @@ while(1)
     
     % Compute torques from forces and convert to currents for servos
     [Tau, Tauflag] = computeTorques(Jv,F);
-    %Tau
-%     if Tauflag
-%         scatter3(posEE_obs(1),posEE_obs(2),posEE_obs(3),'b.');
-%     end
+   
+    %Leaves a blue dot where torque output is at maximum
+    if Tauflag
+        scatter3(posEE_obs(1),posEE_obs(2),posEE_obs(3),'b.');
+    end
         
     % Plot Environment
     if i == 0
@@ -128,7 +124,6 @@ while(1)
             posobst = obsts(1).pos;
         end
          figClosed = drawLynx(h1, h2, h3, F);
- %       figClosed = drawLynx(h1, h2, F);
         
         for j=1:1:length(Env)          
             fill3(Env{1,j}(1,:),Env{1,j}(2,:), Env{1,j}(3,:),[0.7 0 0], 'facealpha', 0.3);
@@ -140,7 +135,8 @@ while(1)
         
         for j = length(texts) + 1 : length(texts) + length(btns)
             fill3(btns{j-length(texts)}.area(1, :), btns{j-length(texts)}.area(2, :), btns{j-length(texts)}.area(3, :) ,[0 1-0.25*j 0.25*j], 'facealpha', 0.3)
-            fill3(btns{j-length(texts)}.area(1, :)-[40 40 40 40], btns{j-length(texts)}.area(2, :), btns{j-length(texts)}.area(3, :) ,[1 1-0.25*j 0.25*j], 'facealpha', 0.3)
+            fill3(btns{j-length(texts)}.area(1, :)/10, btns{j-length(texts)}.area(2, :)/10, btns{j-length(texts)}.area(3, :)+[40 40 40 40] ,[1 1-0.25*j 0.25*j], 'facealpha', 0.3)
+            
         end
         drawnow
 %         hold on;

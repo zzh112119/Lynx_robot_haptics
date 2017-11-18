@@ -1,3 +1,4 @@
+% computes the force feedback when EE interacts with obstacle
 function Fn = computeObstacle(obs)
 global posEE
 
