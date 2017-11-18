@@ -35,10 +35,7 @@ for i  = 1 : length(texts)
     %Model and adding friction by texture
     Fn = computeSurfaceRepel(posEE, texts{i}.area, pos0);
     F = F + Fn;
-%     norm(Fn)
-    velocity'
     Fk = computeTextureForce(Fn, texts{i}.character, velocity) .* [0;1;1];
-    Fk'
     F = F + Fk;
 end
 
@@ -46,7 +43,6 @@ for i = 1 : length(obsts)
     %Model collision with obstacles
     Fk = computeObstacle(obsts(i));
     F = F + Fk;
-%     Fk'
     %Model the movement of obstacles
     obsts_dull(i) = updateObsPosition(obsts(i), pts{1}.pos, Fk, surfs);
 end
@@ -60,9 +56,9 @@ for i = 1 : length(pts)
     %Model attractive and repulsive points -- warning: former code should
     %be modified
     if pts{i}.isattract
-%         F = F + computeAttForce(pts{i}.pos, pts{i}.strength);
-%     else
-%         F = F + computeRepForce();
+         F = F + computeAttForce(pts{i}.pos, pts{i}.strength);
+     else
+         F = F + computeRepForce();
     end
 end
 
