@@ -2,13 +2,13 @@ function obst_dull = updateObsPosition(obst, Pg, Fk, surfs)
 global deltaT
 
 Spotential = 0.5;
-epsilon = 1;
+epsilon = 0.2;
 Fa = [0;0;0];
 if (norm(Pg-obst.pos) > 0)
     Fa = Spotential * (Pg-obst.pos) / norm(Pg-obst.pos); 
 end
 
-accelerate = 0;% - (Fk - Fa) / obst.mass;
+accelerate =  - (Fk - Fa) / obst.mass;
 
 obst_dull = struct('mass', 1, 'r', 0, 'pos', [0;0;0], 'v', [0;0;0]);
 

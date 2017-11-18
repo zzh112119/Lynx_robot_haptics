@@ -34,10 +34,12 @@ end
 for i  = 1 : length(texts)
     %Model and adding friction by texture
     Fn = computeSurfaceRepel(posEE, texts{i}.area, pos0);
+    F = F + Fn;
 %     norm(Fn)
-%     velocity'
-    F = F + computeTextureForce(Fn, texts{i}.character, velocity) .* [0;1;1];
-%     F'
+    velocity'
+    Fk = computeTextureForce(Fn, texts{i}.character, velocity) .* [0;1;1];
+    Fk'
+    F = F + Fk;
 end
 
 for i = 1 : length(obsts)

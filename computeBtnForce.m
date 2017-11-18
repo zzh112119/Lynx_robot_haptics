@@ -24,17 +24,15 @@ if sum(x1 .* X1) >= 0 & sum(x1 .* X2) >= 0 & sum(x4 .* X3) >= 0 & sum(x4 .* X4) 
         ns = -ns;
     end
     if sum(ns .* x1) < 0
-        if norm((x1 .* ns/norm(ns)) .^ 2) < 50
-            F_btn = norm((x1 .* ns/norm(ns)) .^ 2) * (ns / norm(ns))/10;
-                    disp('<30')
+        if norm((x1 .* ns/norm(ns))) < 30
+            F_btn = 0.2* norm((x1 .* ns/norm(ns))) * (ns / norm(ns))/10;
         end
-        if norm((x1 .* ns/norm(ns)) .^ 2)>50 && norm((x1 .* ns/norm(ns)) .^ 2)<80
+        if norm((x1 .* ns/norm(ns)))>30 && norm((x1 .* ns/norm(ns)))<40
             F_btn = 0;
-                    disp('>30,<35')
         end
-        if norm((x1 .* ns/norm(ns)) .^ 2) > 80
-            F_btn = c_surface * sqrt(sum((x1 .* ns/norm(ns)) .^ 2)) * (ns / norm(ns));
-                    disp('>35')
+        if norm((x1 .* ns/norm(ns))) > 40
+            F_btn = c_surface * (norm((x1 .* ns/norm(ns))) -40) .* (ns / norm(ns));
+            F_btn
             if BtnFlag == 1
                 BtnFlag = 0;
             else

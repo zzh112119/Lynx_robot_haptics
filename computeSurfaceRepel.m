@@ -24,7 +24,8 @@ if sum(x1 .* X1) >= 0 & sum(x1 .* X2) >= 0 & sum(x4 .* X3) >= 0 & sum(x4 .* X4) 
     end
     if sum(ns .* x1) < 0
         Fp = c_surface * sqrt(sum((x1 .* ns ./ norm(ns)) .^ 2)) .* (ns / norm(ns));
-        disp('HIT!');
+        %disp('HIT!');
+%         disp(Fp);
     end
 end
 
