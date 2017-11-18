@@ -4,7 +4,7 @@
 close all
 
 % Run on hardware or simulation
-hardwareFlag = true;
+hardwareFlag = false;
 
 % Plot end effector in environment
 global qs % configuration (NOTE: This is only 3 angles now)
@@ -51,7 +51,7 @@ Env_4 = [xmin xmin xmax xmax; ymin ymax ymax ymin; zmax zmax zmax zmax];
 % Env_1=[150 150 150 150; -1300 -1300 1300 1300; 200 1300 1300 200];
 % Env_2 = [150 150 150 150; -1300 -1300 0 0; -1300 200 200 -1300];
 %Env_3 = [150 150 150 150; 0 0 1300 1300; -1300 0 0 -1300];
-Env={};   
+Env={Env_1};   
 
 % Define texture areas 
 Text_1.area = [xmin xmin xmin xmin; ymin ymin ymax ymax; zmin zmax zmax zmin];
@@ -70,13 +70,13 @@ pts = {pts_1};
 %btn_1.area = [xmin xmin xmax xmax; ymin ymin ymin ymin; zmin zmax zmax zmin];
 btn_1.area = [xmin xmin xmin xmin; ymin ymin ymax ymax; zmin zmax zmax zmin];
 btn_1.c = 0.05;
-btns = {btn_1};
+btns = {};
 
 % Define Obstacles
 obsts_1.pos = [250; 0; 200];
 obsts_1.mass = 0.01;
-obsts_1.r = 1;
-obsts_1.v = [-0;-0;0];
+obsts_1.r = 10;
+obsts_1.v = [-10;-10;0];
 obsts = [obsts_1];         
 
 h3 = scatter3(0, 0, 0, 10 * obsts(1).r, 'ro', 'filled');

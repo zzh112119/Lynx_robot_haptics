@@ -18,13 +18,13 @@ obst_dull.pos = obst.pos + deltaT * obst.v + (1 / 2) * deltaT ^ 2 * accelerate;
 obst_dull.v = obst.v + deltaT * accelerate;
 
 for i = 1 : length(surfs)
-    [dis, ns] = psdist3(obst_dull.pos, surfs{i});
+    [dis, ns, Fflag] = psdist3(obst_dull.pos, surfs{i});
     ns = ns / norm(ns);
-    if dis < obst_dull.r
+    if (dis < obst_dull.r && Fflag)
         obst_dull.pos = obst.pos;
-        obst_dull.pos'
+%         obst_dull.pos'
         obst_dull.v = -epsilon * sum(obst.v .* ns) * ns + (obst.v - sum(obst.v .* ns) * ns) + deltaT * accelerate;
-        obst_dull.v'
+%         obst_dull.v'
     end
 end
 
